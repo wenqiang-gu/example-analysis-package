@@ -25,7 +25,7 @@ Add `<example-analysis-package-lib-location>` to `LD_LIBRARY_PATH`
 ```bash
 path-append <example-analysis-package-lib-location>/lib64 LD_LIBRARY_PATH
 ```
-Run example `jsonnet` configuration
+Run example `jsonnet` configuration in the `cfg` foler
 ```bash
 wire-cell -c wct-sim-check.jsonnet
 ```
