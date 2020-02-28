@@ -1,7 +1,7 @@
 # example-analysis-package
 
 ## introduction
-Examples to build WireCell analysis package.
+Examples to build WireCell analysis package:
 
  - `ExampleROOTAna`: is an `IFrameFilter` type of WireCell node.
 It reads in `IFrame`s; tap them out to `root` format and output the same `IFrame`s
@@ -32,4 +32,8 @@ Run example `jsonnet` configuration in the `cfg` foler
 wire-cell -c wct-sim-check.jsonnet
 ```
 
+## Other WireCell packages
+
+ - [Simple package](https://github.com/WireCell/example-package)
+ - [Zpb](https://github.com/brettviren/wire-cell-zpb)
 
