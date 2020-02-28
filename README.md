@@ -3,9 +3,9 @@
 ## introduction
 Examples to build WireCell analysis package:
 
- - `ExampleROOTAna`: is an `IFrameFilter` type of WireCell node.
+ - `ROOTFrameTap`: is an `IFrameFilter` type of WireCell node.
 It reads in `IFrame`s; tap them out to `root` format and output the same `IFrame`s
-Analyzers could perform analysis on the `IFrame`s and modify the `root` output as needed.
+Analyzers could make `IFrame` analyze nodes by adding analysis code.
 
 ## prerequisites
  - Need to have access to a WireCell-Toolkit build.

@@ -9,8 +9,8 @@
  * of band of the flow.
  */
 
-#ifndef WIRECELLROOT_EXAMPLEROOTANA
-#define WIRECELLROOT_EXAMPLEROOTANA
+#ifndef WIRECELLROOT_ROOTFRAMETAP
+#define WIRECELLROOT_ROOTFRAMETAP
 
 #include "WireCellIface/IAnodePlane.h"
 #include "WireCellIface/IConfigurable.h"
@@ -23,10 +23,10 @@ class TFile;
 namespace WireCell {
 namespace Root {
 
-class ExampleROOTAna : public IFrameFilter, public IConfigurable {
+class ROOTFrameTap : public IFrameFilter, public IConfigurable {
 public:
-  ExampleROOTAna();
-  virtual ~ExampleROOTAna();
+  ROOTFrameTap();
+  virtual ~ROOTFrameTap();
 
   /// working operation - interface from IFrameFilter
   /// executed when called by pgrapher

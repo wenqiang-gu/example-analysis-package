@@ -123,7 +123,7 @@ local sp = sp_maker(params, tools);
 local sp_pipes = [sp.make_sigproc(a) for a in tools.anodes];
 
 local rio_sp = [g.pnode({
-      type: 'ExampleROOTAna',
+      type: 'ROOTFrameTap',
       name: 'rio_sp_apa%d' % n,
       data: {
         output_filename: "rio-%d.root" % n,

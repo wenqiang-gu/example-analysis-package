@@ -1,4 +1,4 @@
-#include "WireCellRoot/ExampleROOTAna.h"
+#include "WireCellExampleAna/ROOTFrameTap.h"
 #include "WireCellIface/ITrace.h"
 #include "WireCellIface/SimpleFrame.h"
 #include "WireCellIface/SimpleTrace.h"
@@ -19,22 +19,22 @@
 /// @param NAME - used to configure node in JSON/Jsonnet
 /// @parame CONCRETE - C++ concrete type
 /// @parame ... - interfaces
-WIRECELL_FACTORY(ExampleROOTAna, WireCell::Root::ExampleROOTAna,
+WIRECELL_FACTORY(ROOTFrameTap, WireCell::Root::ROOTFrameTap,
                  WireCell::IFrameFilter, WireCell::IConfigurable)
 
 using namespace WireCell;
 
-Root::ExampleROOTAna::ExampleROOTAna() : log(Log::logger("ana")) {}
+Root::ROOTFrameTap::ROOTFrameTap() : log(Log::logger("ana")) {}
 
-Root::ExampleROOTAna::~ExampleROOTAna() {}
+Root::ROOTFrameTap::~ROOTFrameTap() {}
 
-void Root::ExampleROOTAna::configure(const WireCell::Configuration &cfg) {
+void Root::ROOTFrameTap::configure(const WireCell::Configuration &cfg) {
   std::string fn;
 
   fn = cfg["output_filename"].asString();
   if (fn.empty()) {
     THROW(ValueError() << errmsg{
-              "Must provide output filename to ExampleROOTAna"});
+              "Must provide output filename to ROOTFrameTap"});
   }
 
   auto anode_tn = get<std::string>(cfg, "anode", "AnodePlane");
@@ -45,7 +45,7 @@ void Root::ExampleROOTAna::configure(const WireCell::Configuration &cfg) {
   recreate_out_file();
 }
 
-WireCell::Configuration Root::ExampleROOTAna::default_configuration() const {
+WireCell::Configuration Root::ROOTFrameTap::default_configuration() const {
   Configuration cfg;
 
   cfg["anode"] = "AnodePlane";
@@ -84,7 +84,7 @@ std::vector<WireCell::Binning> collate_byplane(const ITrace::vector &traces,
     // std::cerr << "[wgu] get ind: " << ind << " size: " << one.size() <<
     // std::endl;
     if (one.empty()) {
-      // THROW(ValueError() << errmsg{"ExampleROOTAna: bogus bounds"});
+      // THROW(ValueError() << errmsg{"ROOTFrameTap: bogus bounds"});
       std::cerr << "[wgu] plane: " << ind << " has not traces. " << std::endl;
     } else {
       auto mme = std::minmax_element(one.begin(), one.end());
@@ -106,7 +106,7 @@ std::vector<WireCell::Binning> collate_byplane(const ITrace::vector &traces,
 }
 } // namespace
 
-void Root::ExampleROOTAna::recreate_out_file() const {
+void Root::ROOTFrameTap::recreate_out_file() const {
   const std::string ofname = m_cfg["output_filename"].asString();
   const std::string mode = "RECREATE";
   TFile *output_tf = TFile::Open(ofname.c_str(), mode.c_str());
@@ -115,7 +115,7 @@ void Root::ExampleROOTAna::recreate_out_file() const {
   output_tf = nullptr;
 }
 
-void Root::ExampleROOTAna::peak_frame(const IFrame::pointer &frame) const {
+void Root::ROOTFrameTap::peak_frame(const IFrame::pointer &frame) const {
 
   std::string frame_tags = "";
   for (auto tag : frame->frame_tags()) {
@@ -125,22 +125,22 @@ void Root::ExampleROOTAna::peak_frame(const IFrame::pointer &frame) const {
 
   for (auto tag : frame->trace_tags()) {
     log->info(
-        "ExampleROOTAna: trace tag: \"{}\" in frame: tags \"{}\" - ident: {}",
+        "ROOTFrameTap: trace tag: \"{}\" in frame: tags \"{}\" - ident: {}",
         tag, frame_tags, frame->ident());
   }
 }
 
-void Root::ExampleROOTAna::fill_hist(const IFrame::pointer &frame,
+void Root::ROOTFrameTap::fill_hist(const IFrame::pointer &frame,
                                      TFile *output_tf) const {
 
   for (auto tag : frame->trace_tags()) {
     ITrace::vector traces = FrameTools::tagged_traces(frame, tag);
     if (traces.empty()) {
-      log->warn("ExampleROOTAna: no tagged traces for \"{}\"", tag);
+      log->warn("ROOTFrameTap: no tagged traces for \"{}\"", tag);
       continue;
     }
 
-    log->debug("ExampleROOTAna: tag: \"{}\" with {} traces", tag,
+    log->debug("ROOTFrameTap: tag: \"{}\" with {} traces", tag,
                traces.size());
 
     ITrace::vector traces_byplane[3];
@@ -152,7 +152,7 @@ void Root::ExampleROOTAna::fill_hist(const IFrame::pointer &frame,
       const std::string name = Form("h%c_%s", 'u' + iplane, tag.c_str());
       Binning cbin = binnings[iplane];
       std::stringstream ss;
-      ss << "ExampleROOTAna:"
+      ss << "ROOTFrameTap:"
          << " cbin:" << cbin.nbins() << "[" << cbin.min() << "," << cbin.max()
          << "]"
          << " tbin:" << tbin.nbins() << "[" << tbin.min() << "," << tbin.max()
@@ -186,7 +186,7 @@ void Root::ExampleROOTAna::fill_hist(const IFrame::pointer &frame,
 }
 
 IFrame::pointer
-Root::ExampleROOTAna::fft_frame(const IFrame::pointer &in) const {
+Root::ROOTFrameTap::fft_frame(const IFrame::pointer &in) const {
   WireCell::IFrame::trace_list_t indices;
 
   ITrace::vector *itraces = new ITrace::vector;
@@ -216,18 +216,18 @@ Root::ExampleROOTAna::fft_frame(const IFrame::pointer &in) const {
   return IFrame::pointer(sframe);
 }
 
-bool Root::ExampleROOTAna::operator()(const IFrame::pointer &frame,
+bool Root::ROOTFrameTap::operator()(const IFrame::pointer &frame,
                                       IFrame::pointer &out) {
 
   out = frame;
 
   if (!frame) {
     // eos
-    log->debug("ExampleROOTAna: EOS");
+    log->debug("ROOTFrameTap: EOS");
     return true;
   }
   if (frame->traces()->empty()) {
-    log->debug("ExampleROOTAna: passing through empty frame ID {}",
+    log->debug("ROOTFrameTap: passing through empty frame ID {}",
                frame->ident());
     return true;
   }
@@ -235,7 +235,7 @@ bool Root::ExampleROOTAna::operator()(const IFrame::pointer &frame,
   /// open output file
   const std::string ofname = m_cfg["output_filename"].asString();
   const std::string mode = "UPDATE";
-  log->debug("ExampleROOTAna: opening for output: {} with mode {}", ofname,
+  log->debug("ROOTFrameTap: opening for output: {} with mode {}", ofname,
              mode);
   TFile *output_tf = TFile::Open(ofname.c_str(), mode.c_str());
 
@@ -248,7 +248,7 @@ bool Root::ExampleROOTAna::operator()(const IFrame::pointer &frame,
 
   /// write and close output file
   auto count = output_tf->Write();
-  log->debug("ExampleROOTAna: closing output file {}, wrote {} bytes", ofname,
+  log->debug("ROOTFrameTap: closing output file {}, wrote {} bytes", ofname,
              count);
   output_tf->Close();
   delete output_tf;
